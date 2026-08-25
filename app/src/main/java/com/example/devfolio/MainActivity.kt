@@ -71,15 +71,15 @@ import org.json.JSONArray
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.material3.BottomAppBar
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.platform.UriHandler
 import androidx.compose.ui.text.font.FontStyle
+import androidx.core.content.edit
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.time.delay
 import org.json.JSONObject
 
 data class ProjectData(val name :String, val githubUrl: String)
@@ -239,7 +239,7 @@ class MainActivity : ComponentActivity() {
             color = Color(0xFFE0F2FE)
         ) {
             Image(
-                painter = painterResource(id = R.drawable.project_image_3),
+                painter = painterResource(id = R.drawable.profile_image),
                 contentDescription = "profile image",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
@@ -295,7 +295,7 @@ class MainActivity : ComponentActivity() {
         Surface(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(330.dp),
+                .heightIn(max = 400.dp),
             shape = RoundedCornerShape(corner = CornerSize(18.dp)),
             color = Color.White,
             border = BorderStroke(width = 1.dp, color = Color(0xFFE2E8F0)),
@@ -419,7 +419,11 @@ class MainActivity : ComponentActivity() {
             modifier = Modifier.fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(10.dp)
         ) {
-            itemsIndexed(projects) { index, project ->
+            itemsIndexed(
+                items = projects,
+                key = { index, _ -> index },
+                contentType = { _, _ -> "project_card" }
+            ) { index, project ->
                 Card(
                     modifier = Modifier.fillMaxWidth(),
                     colors = CardDefaults.cardColors(containerColor = Color(0xFFF1F5F9)),
@@ -628,9 +632,9 @@ class MainActivity : ComponentActivity() {
                 jsonArray.put(jsonObject)
             }
 
-            preferences.edit()
-                .putString(PROJECTS_KEY, jsonArray.toString())
-                .apply()
+            preferences.edit {
+                putString(PROJECTS_KEY, jsonArray.toString())
+            }
         }
 
         private companion object {
