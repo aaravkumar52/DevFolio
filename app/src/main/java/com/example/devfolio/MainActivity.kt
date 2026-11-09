@@ -89,16 +89,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            setContent {
-                var showSplash by remember { mutableStateOf(true) }
+            var showSplash by remember { mutableStateOf(true) }
 
-                if (showSplash) {
-                    SplashScreen(onTimeout = { showSplash = false })
-                } else {
-                    // your real app content / NavHost
-                    JetBizCardTheme {
-                        CreateBizCard()
-                    }
+            if (showSplash) {
+                SplashScreen(onTimeout = { showSplash = false })
+            } else {
+                JetBizCardTheme {
+                    CreateBizCard()
                 }
             }
         }
